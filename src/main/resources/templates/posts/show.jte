@@ -1,17 +1,17 @@
 @import com.keremgokhan.blog.models.User
-@import java.util.Map
 @param Map<String, Object> post
-@param User currentUser = null
+@param User? currentUser = null
 @param Boolean isAuthenticated = false
+@param String today
 
-@template.layouts.blog(title = post.get("title").toString(), currentUser = currentUser, isAuthenticated = isAuthenticated, content = @`
+@template.layouts.blog(title = post.get("title").toString(), currentUser = currentUser, isAuthenticated = isAuthenticated, today = today, content = @`
     <article>
-        <h5>${post.get("title").toString()}</h5>
+        <h5>${post.get("title")}</h5>
         <p style="color: #999; font-size: 0.9rem;">
-            ${post.get("date").toString()} at ${post.get("time").toString()}
+            ${post.get("date")} at ${post.get("time")}
         </p>
         <div style="margin-top: 2rem;">
-            $unsafe{post.get("body").toString()}
+            $unsafe{post.get("body")}
         </div>
     </article>
 

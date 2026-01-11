@@ -1,8 +1,9 @@
 @import com.keremgokhan.blog.models.User
 @param User currentUser
 @param Boolean isAuthenticated = true
+@param String today
 
-@template.layouts.blog(title = "Admin", currentUser = currentUser, isAuthenticated = isAuthenticated, content = @`
+@template.layouts.blog(title = "Admin", currentUser = currentUser, isAuthenticated = isAuthenticated, today = today, content = @`
     <h5>Admin Dashboard</h5>
     <p>Welcome back, ${currentUser.getName()}!</p>
 

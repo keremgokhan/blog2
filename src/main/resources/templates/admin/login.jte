@@ -1,7 +1,8 @@
 @param String? error = null
 @param String csrfToken
+@param String today
 
-@template.layouts.blog(title = "Login", content = @`
+@template.layouts.blog(title = "Login", today = today, content = @`
     <h5>Login</h5>
 
     @if(error != null)

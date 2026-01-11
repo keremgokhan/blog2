@@ -3,8 +3,9 @@
 @param Boolean isAuthenticated = true
 @param String? error = null
 @param String csrfToken
+@param String today
 
-@template.layouts.blog(title = "Create Post", currentUser = currentUser, isAuthenticated = isAuthenticated, content = @`
+@template.layouts.blog(title = "Create Post", currentUser = currentUser, isAuthenticated = isAuthenticated, today = today, content = @`
     <h5>Create New Post</h5>
 
     @if(error != null)

@@ -16,11 +16,14 @@ class PostController(
     private val authService: AuthService
 ) {
     fun show(ctx: Context) {
+        val today = DateUtil.formatTodayString(java.time.LocalDateTime.now())
+
         val id = ctx.pathParam("id").toIntOrNull()
         if (id == null) {
             ctx.status(HttpStatus.NOT_FOUND)
             ctx.render("errors/404.jte", mapOf(
-                "message" to "Invalid post ID"
+                "message" to "Invalid post ID",
+                "today" to today
             ))
             return
         }
@@ -29,7 +32,8 @@ class PostController(
         if (post == null) {
             ctx.status(HttpStatus.NOT_FOUND)
             ctx.render("errors/404.jte", mapOf(
-                "message" to "Post not found"
+                "message" to "Post not found",
+                "today" to today
             ))
             return
         }
@@ -46,7 +50,8 @@ class PostController(
                 "time" to DateUtil.formatTime(post.created)
             ),
             "currentUser" to currentUser,
-            "isAuthenticated" to authService.isAuthenticated(ctx)
+            "isAuthenticated" to authService.isAuthenticated(ctx),
+            "today" to today
         ))
     }
 

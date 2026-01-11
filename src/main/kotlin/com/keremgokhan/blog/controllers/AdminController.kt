@@ -2,6 +2,7 @@ package com.keremgokhan.blog.controllers
 
 import com.keremgokhan.blog.services.AuthService
 import com.keremgokhan.blog.utils.CsrfUtil
+import com.keremgokhan.blog.utils.DateUtil
 import io.javalin.http.Context
 import mu.KotlinLogging
 
@@ -12,19 +13,22 @@ class AdminController(
 ) {
     fun index(ctx: Context) {
         val currentUser = authService.getCurrentUser(ctx)
+        val today = DateUtil.formatTodayString(java.time.LocalDateTime.now())
 
         if (currentUser == null) {
             // Show login form
             val error = ctx.queryParam("error")
             ctx.render("admin/login.jte", mapOf(
                 "error" to error,
-                "csrfToken" to CsrfUtil.generateToken(ctx)
+                "csrfToken" to CsrfUtil.generateToken(ctx),
+                "today" to today
             ))
         } else {
             // Show admin dashboard
             ctx.render("admin/index.jte", mapOf(
                 "currentUser" to currentUser,
-                "isAuthenticated" to true
+                "isAuthenticated" to true,
+                "today" to today
             ))
         }
     }
@@ -71,12 +75,14 @@ class AdminController(
         }
 
         val error = ctx.queryParam("error")
+        val today = DateUtil.formatTodayString(java.time.LocalDateTime.now())
 
         ctx.render("admin/create.jte", mapOf(
             "currentUser" to currentUser,
             "isAuthenticated" to true,
             "error" to error,
-            "csrfToken" to CsrfUtil.generateToken(ctx)
+            "csrfToken" to CsrfUtil.generateToken(ctx),
+            "today" to today
         ))
     }
 }

@@ -1,4 +1,4 @@
-@param String title
+@param String title = "Blog"
 @param gg.jte.Content content
 
 <!DOCTYPE html>
@@ -6,8 +6,8 @@
 <head>
     <meta charset="utf-8">
     <title>${title}</title>
-    <meta name="description" content="Bits.">
-    <meta name="author" content="Computer">
+    <meta name="description" content="Kerem Gokhan's personal blog">
+    <meta name="author" content="Kerem Gokhan">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- CSS -->

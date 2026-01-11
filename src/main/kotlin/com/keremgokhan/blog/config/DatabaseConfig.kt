@@ -18,7 +18,7 @@ object DatabaseConfig {
         logger.info { "Initializing database connection" }
 
         val hikariConfig = HikariConfig().apply {
-            jdbcUrl = "jdbc:mysql://${config.database.host}:${config.database.port}/${config.database.name}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC"
+            jdbcUrl = "jdbc:mysql://${config.database.host}:${config.database.port}/${config.database.name}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&characterEncoding=utf8mb4&useUnicode=true"
             username = config.database.user
             password = config.database.password
             driverClassName = "com.mysql.cj.jdbc.Driver"

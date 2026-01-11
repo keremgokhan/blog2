@@ -23,11 +23,13 @@ class IndexController(
         }
 
         val currentUser = authService.getCurrentUser(ctx)
+        val today = DateUtil.formatTodayString(java.time.LocalDateTime.now())
 
         ctx.render("posts/index.jte", mapOf(
             "posts" to posts,
             "currentUser" to currentUser,
-            "isAuthenticated" to authService.isAuthenticated(ctx)
+            "isAuthenticated" to authService.isAuthenticated(ctx),
+            "today" to today
         ))
     }
 }
