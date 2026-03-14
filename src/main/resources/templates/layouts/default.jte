@@ -45,7 +45,7 @@
     ${content}
 
     <div id="cookie-banner" style="display:none;">
-        <span>This site uses cookies for analytics.</span>
+        <span>Hey. This site uses cookies for analytics.</span>
         <div class="cookie-buttons">
             <button onclick="cookieConsent('declined')">Decline</button>
             <button onclick="cookieConsent('accepted')">Accept</button>
