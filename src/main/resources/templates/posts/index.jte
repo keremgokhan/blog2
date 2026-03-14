@@ -11,7 +11,7 @@
         <div class="row">
             <div class="ten columns">
                 <a href="/post/${post.get("id").toString()}">
-                    <h5>${post.get("title").toString()}</h5>
+                    <h1>${post.get("title").toString()}</h1>
                 </a>
             </div>
             <div class="two columns date">
@@ -21,8 +21,8 @@
             </div>
         </div>
         <div class="row marginbottom">
-            <div class="twelve columns">
-                <p>$unsafe{post.get("body").toString()}</p>
+            <div class="twelve columns post-content">
+                $unsafe{post.get("body").toString()}
             </div>
         </div>
     @endfor

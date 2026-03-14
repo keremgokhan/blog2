@@ -8,7 +8,7 @@
 @template.layouts.blog(title = post.get("title").toString(), currentUser = currentUser, isAuthenticated = isAuthenticated, today = today, content = @`
     <div class="row">
         <div class="ten columns">
-            <h5>${post.get("title").toString()}</h5>
+            <h1>${post.get("title").toString()}</h1>
         </div>
         <div class="two columns date">
             <p title="${post.get("time").toString()}">
@@ -17,7 +17,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="twelve columns">
+        <div class="twelve columns post-content">
             $unsafe{post.get("body").toString()}
         </div>
     </div>

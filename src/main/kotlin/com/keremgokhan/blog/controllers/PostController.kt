@@ -5,6 +5,7 @@ import com.keremgokhan.blog.services.PostService
 import com.keremgokhan.blog.utils.CsrfUtil
 import com.keremgokhan.blog.utils.DateUtil
 import com.keremgokhan.blog.utils.HtmlSanitizer
+import com.keremgokhan.blog.utils.MarkdownUtil
 import io.javalin.http.Context
 import io.javalin.http.HttpStatus
 import mu.KotlinLogging
@@ -80,7 +81,8 @@ class PostController(
         }
 
         val user = authService.requireAuth(ctx)
-        val post = postService.createPost(title, body, user.id)
+        val html = MarkdownUtil.render(body)
+        val post = postService.createPost(title, html, user.id)
 
         if (post != null) {
             logger.info { "Post created: ${post.id} - ${post.title}" }

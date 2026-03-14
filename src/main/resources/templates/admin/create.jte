@@ -6,6 +6,59 @@
 @param String today
 
 @template.layouts.blog(title = "New post", currentUser = currentUser, isAuthenticated = isAuthenticated, today = today, content = @`
+    <link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
+    <style>
+        /* Match blog dark theme */
+        .EasyMDEContainer .CodeMirror {
+            background: #111111;
+            color: #FFF;
+            border: 1px solid #333;
+            font-family: "Raleway", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 1.5rem;
+            line-height: 1.6;
+        }
+        .CodeMirror-cursor {
+            border-left-color: #FFF;
+        }
+        .CodeMirror-selected {
+            background: #333 !important;
+        }
+        .editor-toolbar {
+            background: #111111;
+            border-color: #333;
+            opacity: 1;
+        }
+        .editor-toolbar a,
+        .editor-toolbar button {
+            color: #DDD !important;
+            opacity: 1;
+        }
+        .editor-toolbar a:hover,
+        .editor-toolbar a.active,
+        .editor-toolbar button:hover,
+        .editor-toolbar button.active {
+            background: #333 !important;
+            color: #FFF !important;
+            border-color: #555;
+            opacity: 1;
+        }
+        .editor-toolbar i.separator {
+            border-color: #444;
+        }
+        .editor-preview,
+        .editor-preview-side {
+            background: #111111;
+            color: #FFF;
+            border-color: #333;
+        }
+        .editor-statusbar {
+            color: #666;
+        }
+        .EasyMDEContainer .CodeMirror-scroll {
+            min-height: 300px;
+        }
+    </style>
+
     <form action="/post" method="POST">
         <input type="hidden" name="csrf_token" value="${csrfToken}">
         <div class="row">
@@ -15,8 +68,7 @@
         </div>
         <div class="row">
             <div class="twelve columns">
-                <textarea class="borderless post-body" name="body" placeholder="Here you can enter AN ENTIRE MESSAGE CONTENT. No joking. This is the future."></textarea>
-                <small style="color: #999;">HTML is allowed but will be sanitized for security</small>
+                <textarea id="body" name="body"></textarea>
             </div>
         </div>
         <div class="row">
@@ -41,4 +93,21 @@
         </div>
     </div>
     @endif
+
+    <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
+    <script>
+        var easyMDE = new EasyMDE({
+            element: document.getElementById('body'),
+            spellChecker: false,
+            lineWrapping: true,
+            placeholder: 'Write your post here. Markdown and HTML are both supported.',
+            toolbar: [
+                "bold", "italic", "heading", "|",
+                "quote", "unordered-list", "ordered-list", "|",
+                "link", "code", "|",
+                "preview", "side-by-side", "fullscreen", "|",
+                "guide"
+            ]
+        });
+    </script>
 `)
