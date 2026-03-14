@@ -11,10 +11,11 @@ object HtmlSanitizer {
             "strong", "em", "b", "i", "u",
             "ul", "ol", "li",
             "a", "blockquote", "code", "pre",
-            "img"
+            "img", "iframe"
         )
         .allowAttributes("href").onElements("a")
         .allowAttributes("src", "alt", "width", "height").onElements("img")
+        .allowAttributes("src", "width", "height", "frameborder", "allow", "allowfullscreen").onElements("iframe")
         .allowAttributes("class").globally()
         .requireRelNofollowOnLinks()
         .toFactory()
