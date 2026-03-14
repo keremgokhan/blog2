@@ -98,8 +98,10 @@ fun main() {
     app.get("/admin/logout", adminController::logout)
     app.get("/admin/create", adminController::showCreatePost)
 
-    // Post creation
+    // Post creation and editing
     app.post("/post", postController::create)
+    app.get("/post/{id}/edit", postController::showEdit)
+    app.post("/post/{id}/edit", postController::update)
 
     // Sketchbook
     app.get("/sketchbook", sketchbookController::index)
