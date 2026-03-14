@@ -4,11 +4,9 @@ import com.vladsch.flexmark.html.HtmlRenderer
 import com.vladsch.flexmark.parser.Parser
 import com.vladsch.flexmark.util.data.MutableDataSet
 
+
 object MarkdownUtil {
-    private val options = MutableDataSet().apply {
-        // Treat single newlines as <br> so line breaks in the editor are preserved
-        set(HtmlRenderer.SOFT_BREAK, "<br />\n")
-    }
+    private val options = MutableDataSet()
     private val parser = Parser.builder(options).build()
     private val renderer = HtmlRenderer.builder(options).build()
 
