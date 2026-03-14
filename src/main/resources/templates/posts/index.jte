@@ -7,7 +7,9 @@
 @param String today
 
 @template.layouts.blog(title = "Pseudorandom posts on everything.", currentUser = currentUser, isAuthenticated = isAuthenticated, today = today, content = @`
-    @for(var post : posts)
+    !{String[] dinkusSymbols = new String[]{"⊙", "✦", "∴", "∞", "✧", "⋆", "☽", "⁂", "✺", "§", "∾", "❋", "𓂀"};}
+    @for(int i = 0; i < posts.size(); i++)
+        !{var post = posts.get(i);}
         <div class="row">
             <div class="ten columns">
                 <a href="/post/${post.get("id").toString()}">
@@ -25,5 +27,13 @@
                 $unsafe{post.get("body").toString()}
             </div>
         </div>
+        @if(i < posts.size() - 1)
+            !{String dinkus = (i == 0 || i == posts.size() - 2) ? "⊕" : dinkusSymbols[(i - 1) % dinkusSymbols.length];}
+            <div class="row">
+                <div class="twelve columns dinkus">
+                    <span>${dinkus}</span>
+                </div>
+            </div>
+        @endif
     @endfor
 `)
