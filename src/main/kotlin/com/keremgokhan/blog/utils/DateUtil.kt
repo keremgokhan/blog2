@@ -15,7 +15,7 @@ object DateUtil {
      */
     fun formatDateHolocene(dateTime: LocalDateTime): String {
         val holoceneYear = dateTime.year + 10000
-        return "$holoceneYear.${dateTime.monthValue}.${dateTime.dayOfMonth}"
+        return "%d.%02d.%02d".format(holoceneYear, dateTime.monthValue, dateTime.dayOfMonth)
     }
 
     /**
@@ -38,8 +38,7 @@ object DateUtil {
      */
     fun formatTodayString(dateTime: LocalDateTime): String {
         val dayName = dateTime.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.ENGLISH)
-        val holoceneYear = dateTime.year + 10000
-        val dateString = "$holoceneYear.${dateTime.monthValue}.${dateTime.dayOfMonth}"
-        return "Today is $dayName 1$dateString in Amsterdam."
+        val dateString = formatDateHolocene(dateTime)
+        return "Today is $dayName $dateString in Amsterdam."
     }
 }
