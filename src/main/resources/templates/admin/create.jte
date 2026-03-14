@@ -23,9 +23,11 @@
         .CodeMirror-selected {
             background: #333 !important;
         }
-        .editor-toolbar {
-            background: #111111;
-            border-color: #333;
+        .editor-toolbar,
+        .editor-preview-active-side .editor-toolbar,
+        .editor-preview-active .editor-toolbar {
+            background: #111111 !important;
+            border-color: #333 !important;
             opacity: 1;
         }
         .editor-toolbar a,
@@ -39,7 +41,7 @@
         .editor-toolbar button.active {
             background: #333 !important;
             color: #FFF !important;
-            border-color: #555;
+            border-color: #555 !important;
             opacity: 1;
         }
         .editor-toolbar i.separator {
@@ -47,9 +49,14 @@
         }
         .editor-preview,
         .editor-preview-side {
-            background: #111111;
+            background: #111111 !important;
             color: #FFF;
             border-color: #333;
+        }
+        /* Fullscreen mode */
+        .CodeMirror-fullscreen,
+        .editor-preview-side.editor-preview-active-side {
+            background: #111111 !important;
         }
         .editor-statusbar {
             color: #666;
