@@ -80,7 +80,7 @@ fun main() {
                 val cookie = sessionCookieConfig
                 cookie.name = "blog_session"
                 cookie.isHttpOnly = true
-                cookie.isSecure = System.getenv("SECURE_COOKIES") == "true"
+                cookie.isSecure = !isDevelopment // Use secure cookies in production
                 maxInactiveInterval = config.session.maxAge
             }
         }
