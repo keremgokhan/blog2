@@ -83,6 +83,8 @@
             border: 1px solid #444;
             border-radius: 0;
             letter-spacing: 0.05em;
+            text-align: center;
+            line-height: 1;
         }
         .cookie-buttons button:last-child {
             color: #FFF;

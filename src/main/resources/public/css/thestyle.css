@@ -44,6 +44,10 @@ input[type="reset"],
 input[type="button"] {
     color: #FFF;
     border: 1px solid #FFF;
+    border-radius: 0;
+    letter-spacing: 0.05em;
+    text-align: center;
+    line-height: 1;
 }
 
 .button:hover,
