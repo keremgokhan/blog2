@@ -61,11 +61,16 @@ fun main() {
         javalinConfig.fileRenderer(JavalinJte(templateEngine))
 
 
-        // Static files
+        // Static files - use external path in dev for hot-reload, classpath in production
         javalinConfig.staticFiles.add { staticFiles ->
             staticFiles.hostedPath = "/"
-            staticFiles.directory = "/public"
-            staticFiles.location = Location.CLASSPATH
+            if (isDevelopment) {
+                staticFiles.directory = "src/main/resources/public"
+                staticFiles.location = Location.EXTERNAL
+            } else {
+                staticFiles.directory = "/public"
+                staticFiles.location = Location.CLASSPATH
+            }
         }
 
         // Session configuration

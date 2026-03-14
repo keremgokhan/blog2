@@ -38,6 +38,9 @@ dependencies {
     // Configuration
     implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
 
+    // Markdown rendering
+    implementation("com.vladsch.flexmark:flexmark:0.64.8")
+
     // Testing
     testImplementation(kotlin("test"))
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.1")
