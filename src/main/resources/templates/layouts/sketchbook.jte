@@ -1,6 +1,6 @@
 @import com.keremgokhan.blog.models.User
 @param String title = "Sketchbook"
-@param User? currentUser = null
+@param User currentUser = null
 @param Boolean isAuthenticated = false
 @param gg.jte.Content content
 

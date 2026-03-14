@@ -43,7 +43,14 @@ The application will automatically create the necessary tables on first run.
 
 ### 2. Configuration
 
-Configure the application using environment variables or `application.conf`:
+Create a `.env` file in the project root (copy from `.env.example`):
+
+```bash
+cp .env.example .env
+# Edit .env with your configuration
+```
+
+Or set environment variables directly:
 
 ```bash
 export DB_HOST=localhost
@@ -54,7 +61,7 @@ export DB_PASSWORD=your_password
 export SESSION_SECRET=your-secret-key-here
 ```
 
-Alternatively, edit `src/main/resources/application.conf` directly.
+The application reads configuration in this order: `.env` file → environment variables → defaults.
 
 ### 3. Create Admin User
 

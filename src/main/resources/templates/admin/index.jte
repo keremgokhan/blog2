@@ -4,15 +4,9 @@
 @param String today
 
 @template.layouts.blog(title = "Admin", currentUser = currentUser, isAuthenticated = isAuthenticated, today = today, content = @`
-    <h5>Admin Dashboard</h5>
-    <p>Welcome back, ${currentUser.getName()}!</p>
-
-    <div style="margin-top: 2rem;">
-        <h6>Quick Actions</h6>
-        <ul>
-            <li><a href="/admin/create">Create new post</a></li>
-            <li><a href="/">View blog</a></li>
-            <li><a href="/sketchbook">View sketchbook</a></li>
-        </ul>
+    <div class="row">
+        <div class="ten columns">
+            <h5>Welcome back, ${currentUser.getName()}.</h5>
+        </div>
     </div>
 `)

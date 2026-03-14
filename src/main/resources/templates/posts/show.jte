@@ -1,21 +1,29 @@
 @import com.keremgokhan.blog.models.User
+@import java.util.Map
 @param Map<String, Object> post
-@param User? currentUser = null
+@param User currentUser = null
 @param Boolean isAuthenticated = false
 @param String today
 
 @template.layouts.blog(title = post.get("title").toString(), currentUser = currentUser, isAuthenticated = isAuthenticated, today = today, content = @`
-    <article>
-        <h5>${post.get("title")}</h5>
-        <p style="color: #999; font-size: 0.9rem;">
-            ${post.get("date")} at ${post.get("time")}
-        </p>
-        <div style="margin-top: 2rem;">
-            $unsafe{post.get("body")}
+    <div class="row">
+        <div class="ten columns">
+            <h5>${post.get("title").toString()}</h5>
         </div>
-    </article>
-
-    <div style="margin-top: 3rem;">
-        <a href="/">&larr; Back to all posts</a>
+        <div class="two columns date">
+            <p title="${post.get("time").toString()}">
+                ${post.get("date").toString()}
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="twelve columns">
+            $unsafe{post.get("body").toString()}
+        </div>
+    </div>
+    <div class="row">
+        <div class="twelve columns">
+            <a href="/">&larr; Back to all posts</a>
+        </div>
     </div>
 `)

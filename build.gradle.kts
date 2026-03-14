@@ -36,7 +36,6 @@ dependencies {
     implementation("io.github.microutils:kotlin-logging-jvm:3.0.5")
 
     // Configuration
-    implementation("com.typesafe:config:1.4.3")
     implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
 
     // Testing
@@ -63,4 +62,13 @@ tasks.jar {
     manifest {
         attributes["Main-Class"] = "com.keremgokhan.blog.ApplicationKt"
     }
+}
+
+// Task to generate BCrypt hash for passwords
+tasks.register<JavaExec>("hashPassword") {
+    group = "utility"
+    description = "Generate BCrypt hash for a password (usage: ./gradlew hashPassword --args='yourpassword')"
+    mainClass.set("com.keremgokhan.blog.util.GeneratePasswordHashKt")
+    classpath = sourceSets["main"].runtimeClasspath
+    standardOutput = System.out
 }

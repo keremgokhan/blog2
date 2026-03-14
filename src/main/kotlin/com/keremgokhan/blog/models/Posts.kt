@@ -10,8 +10,8 @@ object Posts : IntIdTable("Post") {
     val title = varchar("title", 255)
     val body = text("body")
     val authorId = reference("author_id", Users)
-    val created = datetime("created").default(LocalDateTime.now())
-    val updated = timestamp("updated").default(Instant.now())
+    val created = datetime("created")
+    val updated = datetime("updated").nullable()
 }
 
 data class Post(

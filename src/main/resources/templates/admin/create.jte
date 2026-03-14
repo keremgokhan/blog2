@@ -1,40 +1,44 @@
 @import com.keremgokhan.blog.models.User
 @param User currentUser
 @param Boolean isAuthenticated = true
-@param String? error = null
+@param String error = null
 @param String csrfToken
 @param String today
 
-@template.layouts.blog(title = "Create Post", currentUser = currentUser, isAuthenticated = isAuthenticated, today = today, content = @`
-    <h5>Create New Post</h5>
-
-    @if(error != null)
-        <div style="padding: 1rem; background: #ff6b6b; color: white; margin-bottom: 1rem; border-radius: 4px;">
-            @if(error.equals("empty"))
-                Please fill in both title and body
-            @elseif(error.equals("failed"))
-                Failed to create post. Please try again.
-            @else
-                An error occurred. Please try again.
-            @endif
-        </div>
-    @endif
-
-    <form method="post" action="/post">
+@template.layouts.blog(title = "New post", currentUser = currentUser, isAuthenticated = isAuthenticated, today = today, content = @`
+    <form action="/post" method="POST">
         <input type="hidden" name="csrf_token" value="${csrfToken}">
-
-        <div>
-            <label for="title">Title</label>
-            <input type="text" id="title" name="title" class="u-full-width" required autofocus>
+        <div class="row">
+            <div class="twelve columns">
+                <input class="borderless title-input" name="title" type="text" placeholder="You can enter a title here." autofocus>
+            </div>
         </div>
-
-        <div>
-            <label for="body">Body</label>
-            <textarea id="body" name="body" class="u-full-width" style="min-height: 300px;" required></textarea>
-            <small style="color: #999;">HTML is allowed but will be sanitized for security</small>
+        <div class="row">
+            <div class="twelve columns">
+                <textarea class="borderless post-body" name="body" placeholder="Here you can enter AN ENTIRE MESSAGE CONTENT. No joking. This is the future."></textarea>
+                <small style="color: #999;">HTML is allowed but will be sanitized for security</small>
+            </div>
         </div>
-
-        <button type="submit" class="button-primary">Create Post</button>
-        <a href="/admin" class="button" style="margin-left: 1rem;">Cancel</a>
+        <div class="row">
+            <div class="twelve columns">
+                <input class="button-primary" type="submit" value="Post">
+                <a href="/admin" class="button" style="margin-left: 1rem;">Cancel</a>
+            </div>
+        </div>
     </form>
+    @if(error != null)
+    <div class="row">
+        <div class="ten columns">
+            <p>
+                @if(error.equals("empty"))
+                    Please fill in both title and body
+                @elseif(error.equals("failed"))
+                    Failed to create post. Please try again.
+                @else
+                    ${error}
+                @endif
+            </p>
+        </div>
+    </div>
+    @endif
 `)

@@ -24,7 +24,7 @@ fun main() {
         ignoreIfMissing = true
     }
 
-    val config = AppConfig.load()
+    val config = AppConfig.load(dotenv)
 
     logger.info { "Starting Blog application..." }
 
