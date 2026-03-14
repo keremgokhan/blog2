@@ -91,6 +91,7 @@ fun main() {
     // Define routes
     // Public routes
     app.get("/", indexController::index)
+    app.get("/sitemap.xml", indexController::sitemap)
     app.get("/post/{id}", postController::show)
 
     // Admin routes

@@ -1,4 +1,6 @@
 @param String title = "Blog"
+@param String description = "Kerem Gokhan's personal blog"
+@param String canonicalUrl = "https://keremgokhan.net"
 @param gg.jte.Content content
 
 <!DOCTYPE html>
@@ -6,9 +8,22 @@
 <head>
     <meta charset="utf-8">
     <title>${title}</title>
-    <meta name="description" content="Kerem Gokhan's personal blog">
+    <meta name="description" content="${description}">
     <meta name="author" content="Kerem Gokhan">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="canonical" href="${canonicalUrl}">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Kerem Gokhan">
+    <meta property="og:title" content="${title}">
+    <meta property="og:description" content="${description}">
+    <meta property="og:url" content="${canonicalUrl}">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="${title}">
+    <meta name="twitter:description" content="${description}">
 
     <!-- CSS -->
     <link rel="stylesheet" href="/css/normalize.css">

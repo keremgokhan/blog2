@@ -40,16 +40,21 @@ class PostController(
         }
 
         val currentUser = authService.getCurrentUser(ctx)
+        val sanitizedBody = HtmlSanitizer.sanitize(post.body)
+        val plainText = sanitizedBody.replace(Regex("<[^>]*>"), " ").replace(Regex("\\s+"), " ").trim()
+        val description = if (plainText.length > 160) plainText.substring(0, 157) + "..." else plainText
 
         ctx.render("posts/show.jte", mapOf(
             "post" to mapOf(
                 "id" to post.id,
                 "title" to post.title,
-                "body" to HtmlSanitizer.sanitize(post.body),
+                "body" to sanitizedBody,
                 "author" to post.author,
                 "date" to DateUtil.formatDateHolocene(post.created),
                 "time" to DateUtil.formatTime(post.created)
             ),
+            "description" to description,
+            "canonicalUrl" to "https://keremgokhan.net/post/${post.id}",
             "currentUser" to currentUser,
             "isAuthenticated" to authService.isAuthenticated(ctx),
             "today" to today

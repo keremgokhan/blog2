@@ -4,8 +4,10 @@
 @param User currentUser = null
 @param Boolean isAuthenticated = false
 @param String today
+@param String description = "Kerem Gokhan's personal blog"
+@param String canonicalUrl = "https://keremgokhan.net"
 
-@template.layouts.blog(title = post.get("title").toString(), currentUser = currentUser, isAuthenticated = isAuthenticated, today = today, content = @`
+@template.layouts.blog(title = post.get("title").toString(), description = description, canonicalUrl = canonicalUrl, currentUser = currentUser, isAuthenticated = isAuthenticated, today = today, content = @`
     <div class="row">
         <div class="ten columns">
             <h1>${post.get("title").toString()}</h1>
