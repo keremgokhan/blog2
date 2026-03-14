@@ -17,6 +17,7 @@ object HtmlSanitizer {
         .allowAttributes("src", "alt", "width", "height").onElements("img")
         .allowAttributes("src", "width", "height", "frameborder", "allow", "allowfullscreen", "allowtransparency").onElements("iframe")
         .allowAttributes("class").globally()
+        .allowUrlProtocols("https", "http")
         .requireRelNofollowOnLinks()
         .toFactory()
 
