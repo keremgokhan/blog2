@@ -38,6 +38,10 @@ application-local.conf
 src/main/resources/application-local.conf
 .env
 
+# Database dumps
+*.sql
+*.sql.gz
+
 # Test reports
 build/reports/
 

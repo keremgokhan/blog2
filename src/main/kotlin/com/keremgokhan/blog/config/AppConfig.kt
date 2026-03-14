@@ -1,7 +1,6 @@
 package com.keremgokhan.blog.config
 
-import com.typesafe.config.Config
-import com.typesafe.config.ConfigFactory
+import io.github.cdimascio.dotenv.Dotenv
 
 data class AppConfig(
     val server: ServerConfig,
@@ -33,50 +32,36 @@ data class AppConfig(
     )
 
     companion object {
-        fun load(): AppConfig {
-            val config = ConfigFactory.load()
+        fun load(dotenv: Dotenv? = null): AppConfig {
             return AppConfig(
                 server = ServerConfig(
-                    port = config.getIntOrDefault("server.port", 7070),
-                    host = config.getStringOrDefault("server.host", "0.0.0.0")
+                    port = getEnv(dotenv, "SERVER_PORT", "7070").toInt(),
+                    host = getEnv(dotenv, "SERVER_HOST", "0.0.0.0")
                 ),
                 database = DatabaseConfig(
-                    host = config.getStringOrEnv("database.host", "DB_HOST", "localhost"),
-                    port = config.getIntOrDefault("database.port", 3306),
-                    name = config.getStringOrEnv("database.name", "DB_NAME", "blog"),
-                    user = config.getStringOrEnv("database.user", "DB_USER", "root"),
-                    password = config.getStringOrEnv("database.password", "DB_PASSWORD", "")
+                    host = getEnv(dotenv, "DB_HOST", "localhost"),
+                    port = getEnv(dotenv, "DB_PORT", "3306").toInt(),
+                    name = getEnv(dotenv, "DB_NAME", "blog"),
+                    user = getEnv(dotenv, "DB_USER", "root"),
+                    password = getEnv(dotenv, "DB_PASSWORD", "")
                 ),
                 session = SessionConfig(
-                    secret = config.getStringOrEnv("session.secret", "SESSION_SECRET", "change-this-secret-in-production"),
-                    maxAge = config.getIntOrDefault("session.maxAge", 86400) // 24 hours
+                    secret = getEnv(dotenv, "SESSION_SECRET", "change-this-secret-in-production"),
+                    maxAge = getEnv(dotenv, "SESSION_MAX_AGE", "86400").toInt()
                 ),
                 analytics = AnalyticsConfig(
-                    enabled = config.getBooleanOrDefault("analytics.enabled", false),
-                    googleAnalyticsId = config.getStringOrNull("analytics.googleAnalyticsId")
+                    enabled = getEnv(dotenv, "ANALYTICS_ENABLED", "false").toBoolean(),
+                    googleAnalyticsId = getEnvOrNull(dotenv, "GOOGLE_ANALYTICS_ID")
                 )
             )
         }
 
-        private fun Config.getStringOrEnv(path: String, envVar: String, default: String): String {
-            return System.getenv(envVar)
-                ?: if (hasPath(path)) getString(path) else default
+        private fun getEnv(dotenv: Dotenv?, key: String, default: String): String {
+            return dotenv?.get(key) ?: System.getenv(key) ?: default
         }
 
-        private fun Config.getStringOrDefault(path: String, default: String): String {
-            return if (hasPath(path)) getString(path) else default
-        }
-
-        private fun Config.getIntOrDefault(path: String, default: Int): Int {
-            return if (hasPath(path)) getInt(path) else default
-        }
-
-        private fun Config.getBooleanOrDefault(path: String, default: Boolean): Boolean {
-            return if (hasPath(path)) getBoolean(path) else default
-        }
-
-        private fun Config.getStringOrNull(path: String): String? {
-            return if (hasPath(path)) getString(path) else null
+        private fun getEnvOrNull(dotenv: Dotenv?, key: String): String? {
+            return dotenv?.get(key) ?: System.getenv(key)
         }
     }
 }

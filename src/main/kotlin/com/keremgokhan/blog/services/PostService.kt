@@ -6,6 +6,7 @@ import com.keremgokhan.blog.models.Posts
 import com.keremgokhan.blog.models.Users
 import mu.KotlinLogging
 import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.time.LocalDateTime
 
@@ -64,7 +65,7 @@ class PostService {
     }
 
     fun deletePost(id: Int): Boolean = transaction {
-        Posts.deleteWhere { Posts.id eq id } > 0
+        Posts.deleteWhere(op = { Posts.id eq id }) > 0
     }
 
     fun updatePost(id: Int, title: String, body: String): Boolean = transaction {

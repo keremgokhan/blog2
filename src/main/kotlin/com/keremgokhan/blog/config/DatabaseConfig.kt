@@ -16,11 +16,13 @@ object DatabaseConfig {
 
     fun init(config: AppConfig) {
         logger.info { "Initializing database connection" }
+        logger.info { "Database config: host=${config.database.host}, port=${config.database.port}, name=${config.database.name}, user=${config.database.user}" }
 
         val hikariConfig = HikariConfig().apply {
-            jdbcUrl = "jdbc:mysql://${config.database.host}:${config.database.port}/${config.database.name}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&characterEncoding=utf8mb4&useUnicode=true"
+            jdbcUrl = "jdbc:mysql://${config.database.host}:${config.database.port}/${config.database.name}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&useUnicode=true&connectionCollation=utf8mb4_unicode_ci"
             username = config.database.user
             password = config.database.password
+            logger.info { "JDBC URL: $jdbcUrl" }
             driverClassName = "com.mysql.cj.jdbc.Driver"
             maximumPoolSize = 10
             minimumIdle = 2

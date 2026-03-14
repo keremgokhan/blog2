@@ -1,4 +1,4 @@
-@param String? error = null
+@param String error = null
 @param String csrfToken
 @param String today
 
