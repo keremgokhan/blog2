@@ -10,7 +10,7 @@
     !{String[] dinkusSymbols = new String[]{"⊙", "✦", "∴", "∞", "✧", "⋆", "☽", "⁂", "✺", "§", "∾", "❋", "𓂀"};}
     @for(int i = 0; i < posts.size(); i++)
         !{var post = posts.get(i);}
-        <div class="row">
+        <div class="row" data-post-index="${i}">
             <div class="ten columns">
                 <a href="/post/${post.get("id").toString()}">
                     <h1>${post.get("title").toString()}</h1>
@@ -36,4 +36,20 @@
             </div>
         @endif
     @endfor
+
+    <script>
+        var observer = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    var index = entry.target.getAttribute('data-post-index');
+                    gtag('event', 'post_viewed', { post_index: parseInt(index) });
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        document.querySelectorAll('[data-post-index]').forEach(function(el) {
+            observer.observe(el);
+        });
+    </script>
 `)
