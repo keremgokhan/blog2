@@ -40,7 +40,7 @@ fun main() {
     // Initialize controllers
     val indexController = IndexController(postService, authService)
     val postController = PostController(postService, authService)
-    val adminController = AdminController(authService)
+    val adminController = AdminController(authService, postService)
     val sketchbookController = SketchbookController(authService)
 
     // Configure template engine
@@ -103,7 +103,8 @@ fun main() {
     app.post("/post", postController::create)
     app.get("/post/{id}/edit", postController::showEdit)
     app.post("/post/{id}/edit", postController::update)
-    app.post("/post/{id}/delete", postController::delete)
+    app.post("/post/{id}/archive", postController::archive)
+    app.post("/post/{id}/restore", postController::restore)
 
     // Sketchbook
     app.get("/sketchbook", sketchbookController::index)

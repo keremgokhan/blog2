@@ -23,13 +23,15 @@
                 <textarea id="body" name="body">${post.get("body").toString()}</textarea>
             </div>
         </div>
+        <input type="hidden" name="draft" id="draft-flag" value="false">
         <div class="row">
             <div class="twelve columns">
                 <input class="button-primary" type="submit" value="Save">
+                <button type="submit" onclick="document.getElementById('draft-flag').value='true'" style="margin-left: 1rem;">Save as Draft</button>
                 <a href="/post/${post.get("id").toString()}" class="button" style="margin-left: 1rem;">Cancel</a>
-                <form action="/post/${post.get("id").toString()}/delete" method="POST" style="display:inline; margin-left: 1rem;">
+                <form action="/post/${post.get("id").toString()}/archive" method="POST" style="display:inline; margin-left: 1rem;">
                     <input type="hidden" name="csrf_token" value="${csrfToken}">
-                    <button type="submit" onclick="return confirm('Delete this post?')">Delete</button>
+                    <button type="submit" onclick="return confirm('Archive this post?')">Archive</button>
                 </form>
             </div>
         </div>

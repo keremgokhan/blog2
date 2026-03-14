@@ -1,6 +1,7 @@
 package com.keremgokhan.blog.controllers
 
 import com.keremgokhan.blog.services.AuthService
+import com.keremgokhan.blog.services.PostService
 import com.keremgokhan.blog.utils.CsrfUtil
 import com.keremgokhan.blog.utils.DateUtil
 import io.javalin.http.Context
@@ -9,7 +10,8 @@ import mu.KotlinLogging
 private val logger = KotlinLogging.logger {}
 
 class AdminController(
-    private val authService: AuthService
+    private val authService: AuthService,
+    private val postService: PostService
 ) {
     fun index(ctx: Context) {
         val currentUser = authService.getCurrentUser(ctx)
@@ -24,11 +26,19 @@ class AdminController(
                 "today" to today
             ))
         } else {
-            // Show admin dashboard
+            val drafts = postService.getPostsByStatus("draft").map { post ->
+                mapOf("id" to post.id, "title" to post.title)
+            }
+            val archived = postService.getPostsByStatus("archived").map { post ->
+                mapOf("id" to post.id, "title" to post.title)
+            }
             ctx.render("admin/index.jte", mapOf(
                 "currentUser" to currentUser,
                 "isAuthenticated" to true,
-                "today" to today
+                "today" to today,
+                "drafts" to drafts,
+                "archived" to archived,
+                "csrfToken" to CsrfUtil.generateToken(ctx)
             ))
         }
     }

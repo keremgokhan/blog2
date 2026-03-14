@@ -21,9 +21,11 @@
                 <textarea id="body" name="body"></textarea>
             </div>
         </div>
+        <input type="hidden" name="draft" id="draft-flag" value="false">
         <div class="row">
             <div class="twelve columns">
                 <input class="button-primary" type="submit" value="Post">
+                <button type="submit" onclick="document.getElementById('draft-flag').value='true'" style="margin-left: 1rem;">Save as Draft</button>
                 <a href="/admin" class="button" style="margin-left: 1rem;">Cancel</a>
             </div>
         </div>

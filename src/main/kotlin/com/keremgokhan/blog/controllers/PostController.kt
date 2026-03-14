@@ -117,19 +117,20 @@ class PostController(
             return
         }
 
+        val status = if (ctx.formParam("draft") == "true") "draft" else "published"
         val html = MarkdownUtil.render(body)
-        val updated = postService.updatePost(id, title, html)
+        val updated = postService.updatePost(id, title, html, status)
 
         if (updated) {
-            logger.info { "Post updated: $id" }
-            ctx.redirect("/post/$id")
+            logger.info { "Post updated ($status): $id" }
+            if (status == "draft") ctx.redirect("/admin") else ctx.redirect("/post/$id")
         } else {
             logger.error { "Failed to update post: $id" }
             ctx.redirect("/post/$id/edit?error=failed")
         }
     }
 
-    fun delete(ctx: Context) {
+    fun archive(ctx: Context) {
         if (!authService.isAuthenticated(ctx)) {
             ctx.status(HttpStatus.UNAUTHORIZED)
             ctx.redirect("/admin")
@@ -137,7 +138,7 @@ class PostController(
         }
 
         if (!CsrfUtil.validateToken(ctx)) {
-            logger.warn { "CSRF token validation failed on delete" }
+            logger.warn { "CSRF token validation failed on archive" }
             ctx.status(HttpStatus.FORBIDDEN)
             ctx.result("CSRF token validation failed")
             return
@@ -149,14 +150,45 @@ class PostController(
             return
         }
 
-        val deleted = postService.deletePost(id)
+        val archived = postService.setStatus(id, "archived")
 
-        if (deleted) {
-            logger.info { "Post deleted: $id" }
-            ctx.redirect("/")
+        if (archived) {
+            logger.info { "Post archived: $id" }
+            ctx.redirect("/admin")
         } else {
-            logger.error { "Failed to delete post: $id" }
+            logger.error { "Failed to archive post: $id" }
             ctx.redirect("/post/$id/edit?error=failed")
+        }
+    }
+
+    fun restore(ctx: Context) {
+        if (!authService.isAuthenticated(ctx)) {
+            ctx.status(HttpStatus.UNAUTHORIZED)
+            ctx.redirect("/admin")
+            return
+        }
+
+        if (!CsrfUtil.validateToken(ctx)) {
+            logger.warn { "CSRF token validation failed on restore" }
+            ctx.status(HttpStatus.FORBIDDEN)
+            ctx.result("CSRF token validation failed")
+            return
+        }
+
+        val id = ctx.pathParam("id").toIntOrNull()
+        if (id == null) {
+            ctx.status(HttpStatus.NOT_FOUND)
+            return
+        }
+
+        val restored = postService.setStatus(id, "published")
+
+        if (restored) {
+            logger.info { "Post restored: $id" }
+            ctx.redirect("/admin")
+        } else {
+            logger.error { "Failed to restore post: $id" }
+            ctx.redirect("/admin")
         }
     }
 
@@ -185,12 +217,13 @@ class PostController(
         }
 
         val user = authService.requireAuth(ctx)
+        val status = if (ctx.formParam("draft") == "true") "draft" else "published"
         val html = MarkdownUtil.render(body)
-        val post = postService.createPost(title, html, user.id)
+        val post = postService.createPost(title, html, user.id, status)
 
         if (post != null) {
-            logger.info { "Post created: ${post.id} - ${post.title}" }
-            ctx.redirect("/")
+            logger.info { "Post created (${post.status}): ${post.id} - ${post.title}" }
+            if (status == "draft") ctx.redirect("/admin") else ctx.redirect("/")
         } else {
             logger.error { "Failed to create post" }
             ctx.redirect("/admin/create?error=failed")

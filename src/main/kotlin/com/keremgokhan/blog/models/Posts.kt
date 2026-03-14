@@ -12,6 +12,7 @@ object Posts : IntIdTable("Post") {
     val authorId = reference("author_id", Users)
     val created = datetime("created")
     val updated = datetime("updated").nullable()
+    val status = varchar("status", 20).default("published")
 }
 
 data class Post(
@@ -19,7 +20,8 @@ data class Post(
     val title: String,
     val body: String,
     val authorId: Int,
-    val created: LocalDateTime
+    val created: LocalDateTime,
+    val status: String = "published"
 )
 
 data class PostWithAuthor(
@@ -27,5 +29,6 @@ data class PostWithAuthor(
     val title: String,
     val body: String,
     val author: String,
-    val created: LocalDateTime
+    val created: LocalDateTime,
+    val status: String = "published"
 )
