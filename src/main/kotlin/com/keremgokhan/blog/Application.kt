@@ -6,6 +6,7 @@ import com.keremgokhan.blog.controllers.*
 import com.keremgokhan.blog.services.AuthService
 import com.keremgokhan.blog.services.PostService
 import com.keremgokhan.blog.services.UserService
+import com.keremgokhan.blog.utils.DateUtil
 import gg.jte.ContentType
 import gg.jte.TemplateEngine
 import gg.jte.resolve.DirectoryCodeResolver
@@ -109,14 +110,16 @@ fun main() {
     // Error handlers
     app.error(404) { ctx ->
         ctx.render("errors/404.jte", mapOf(
-            "message" to "Page not found"
+            "message" to "Page not found",
+            "today" to DateUtil.formatTodayString(java.time.LocalDateTime.now())
         ))
     }
 
     app.error(500) { ctx ->
         logger.error { "Internal server error: ${ctx.result()}" }
         ctx.render("errors/500.jte", mapOf(
-            "message" to "Internal server error"
+            "message" to "Internal server error",
+            "today" to DateUtil.formatTodayString(java.time.LocalDateTime.now())
         ))
     }
 

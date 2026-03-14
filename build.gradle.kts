@@ -2,6 +2,7 @@ plugins {
     kotlin("jvm") version "1.9.22"
     application
     id("com.github.johnrengelman.shadow") version "8.1.1"
+    id("gg.jte.gradle") version "3.1.9"
 }
 
 group = "com.keremgokhan"
@@ -65,6 +66,18 @@ tasks.jar {
     manifest {
         attributes["Main-Class"] = "com.keremgokhan.blog.ApplicationKt"
     }
+}
+
+// JTE precompilation for production builds
+jte {
+    sourceDirectory.set(file("src/main/resources/templates").toPath())
+    precompile()
+}
+
+// Ensure precompiled JTE classes are included in the shadow JAR
+tasks.shadowJar {
+    dependsOn("precompileJte")
+    from(fileTree("jte-classes"))
 }
 
 // Task to generate BCrypt hash for passwords
