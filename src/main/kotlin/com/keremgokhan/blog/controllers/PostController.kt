@@ -56,6 +56,79 @@ class PostController(
         ))
     }
 
+    fun showEdit(ctx: Context) {
+        if (!authService.isAuthenticated(ctx)) {
+            ctx.redirect("/admin")
+            return
+        }
+
+        val id = ctx.pathParam("id").toIntOrNull()
+        val post = if (id != null) postService.getPostById(id) else null
+        if (post == null) {
+            ctx.status(HttpStatus.NOT_FOUND)
+            ctx.render("errors/404.jte", mapOf(
+                "message" to "Post not found",
+                "today" to DateUtil.formatTodayString(java.time.LocalDateTime.now())
+            ))
+            return
+        }
+
+        val currentUser = authService.getCurrentUser(ctx)
+        val today = DateUtil.formatTodayString(java.time.LocalDateTime.now())
+
+        ctx.render("admin/edit.jte", mapOf(
+            "post" to mapOf(
+                "id" to post.id,
+                "title" to post.title,
+                "body" to post.body
+            ),
+            "currentUser" to currentUser,
+            "isAuthenticated" to true,
+            "csrfToken" to CsrfUtil.generateToken(ctx),
+            "today" to today
+        ))
+    }
+
+    fun update(ctx: Context) {
+        if (!authService.isAuthenticated(ctx)) {
+            ctx.status(HttpStatus.UNAUTHORIZED)
+            ctx.redirect("/admin")
+            return
+        }
+
+        if (!CsrfUtil.validateToken(ctx)) {
+            logger.warn { "CSRF token validation failed on update" }
+            ctx.status(HttpStatus.FORBIDDEN)
+            ctx.result("CSRF token validation failed")
+            return
+        }
+
+        val id = ctx.pathParam("id").toIntOrNull()
+        if (id == null) {
+            ctx.status(HttpStatus.NOT_FOUND)
+            return
+        }
+
+        val title = ctx.formParam("title")?.trim()
+        val body = ctx.formParam("body")?.trim()
+
+        if (title.isNullOrBlank() || body.isNullOrBlank()) {
+            ctx.redirect("/post/$id/edit?error=empty")
+            return
+        }
+
+        val html = MarkdownUtil.render(body)
+        val updated = postService.updatePost(id, title, html)
+
+        if (updated) {
+            logger.info { "Post updated: $id" }
+            ctx.redirect("/post/$id")
+        } else {
+            logger.error { "Failed to update post: $id" }
+            ctx.redirect("/post/$id/edit?error=failed")
+        }
+    }
+
     fun create(ctx: Context) {
         // Verify authentication
         if (!authService.isAuthenticated(ctx)) {

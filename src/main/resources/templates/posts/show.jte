@@ -24,6 +24,9 @@
     <div class="row">
         <div class="twelve columns">
             <a href="/">&larr; Back to all posts</a>
+            @if(isAuthenticated)
+                <a href="/post/${post.get("id").toString()}/edit" class="button" style="float: right;">Edit</a>
+            @endif
         </div>
     </div>
 `)

@@ -1,30 +1,32 @@
 @import com.keremgokhan.blog.models.User
+@import java.util.Map
+@param Map<String, Object> post
 @param User currentUser
 @param Boolean isAuthenticated = true
 @param String error = null
 @param String csrfToken
 @param String today
 
-@template.layouts.blog(title = "New post", currentUser = currentUser, isAuthenticated = isAuthenticated, today = today, content = @`
+@template.layouts.blog(title = "Edit post", currentUser = currentUser, isAuthenticated = isAuthenticated, today = today, content = @`
     <link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
     <link rel="stylesheet" href="/css/editor.css">
 
-    <form action="/post" method="POST">
+    <form action="/post/${post.get("id").toString()}/edit" method="POST">
         <input type="hidden" name="csrf_token" value="${csrfToken}">
         <div class="row">
             <div class="twelve columns">
-                <input class="borderless title-input" name="title" type="text" placeholder="You can enter a title here." autofocus>
+                <input class="borderless title-input" name="title" type="text" value="${post.get("title").toString()}" autofocus>
             </div>
         </div>
         <div class="row">
             <div class="twelve columns">
-                <textarea id="body" name="body"></textarea>
+                <textarea id="body" name="body">${post.get("body").toString()}</textarea>
             </div>
         </div>
         <div class="row">
             <div class="twelve columns">
-                <input class="button-primary" type="submit" value="Post">
-                <a href="/admin" class="button" style="margin-left: 1rem;">Cancel</a>
+                <input class="button-primary" type="submit" value="Save">
+                <a href="/post/${post.get("id").toString()}" class="button" style="margin-left: 1rem;">Cancel</a>
             </div>
         </div>
     </form>
@@ -35,7 +37,7 @@
                 @if(error.equals("empty"))
                     Please fill in both title and body
                 @elseif(error.equals("failed"))
-                    Failed to create post. Please try again.
+                    Failed to save. Please try again.
                 @else
                     ${error}
                 @endif
@@ -50,7 +52,6 @@
             element: document.getElementById('body'),
             spellChecker: false,
             lineWrapping: true,
-            placeholder: 'Write your post here. Markdown and HTML are both supported.',
             toolbar: [
                 "bold", "italic", "heading", "|",
                 "quote", "unordered-list", "ordered-list", "|",
