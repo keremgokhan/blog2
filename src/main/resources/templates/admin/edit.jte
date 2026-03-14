@@ -27,6 +27,10 @@
             <div class="twelve columns">
                 <input class="button-primary" type="submit" value="Save">
                 <a href="/post/${post.get("id").toString()}" class="button" style="margin-left: 1rem;">Cancel</a>
+                <form action="/post/${post.get("id").toString()}/delete" method="POST" style="display:inline; margin-left: 1rem;">
+                    <input type="hidden" name="csrf_token" value="${csrfToken}">
+                    <button type="submit" onclick="return confirm('Delete this post?')">Delete</button>
+                </form>
             </div>
         </div>
     </form>

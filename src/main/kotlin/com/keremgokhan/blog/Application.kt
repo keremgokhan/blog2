@@ -103,6 +103,7 @@ fun main() {
     app.post("/post", postController::create)
     app.get("/post/{id}/edit", postController::showEdit)
     app.post("/post/{id}/edit", postController::update)
+    app.post("/post/{id}/delete", postController::delete)
 
     // Sketchbook
     app.get("/sketchbook", sketchbookController::index)

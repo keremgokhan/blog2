@@ -129,6 +129,37 @@ class PostController(
         }
     }
 
+    fun delete(ctx: Context) {
+        if (!authService.isAuthenticated(ctx)) {
+            ctx.status(HttpStatus.UNAUTHORIZED)
+            ctx.redirect("/admin")
+            return
+        }
+
+        if (!CsrfUtil.validateToken(ctx)) {
+            logger.warn { "CSRF token validation failed on delete" }
+            ctx.status(HttpStatus.FORBIDDEN)
+            ctx.result("CSRF token validation failed")
+            return
+        }
+
+        val id = ctx.pathParam("id").toIntOrNull()
+        if (id == null) {
+            ctx.status(HttpStatus.NOT_FOUND)
+            return
+        }
+
+        val deleted = postService.deletePost(id)
+
+        if (deleted) {
+            logger.info { "Post deleted: $id" }
+            ctx.redirect("/")
+        } else {
+            logger.error { "Failed to delete post: $id" }
+            ctx.redirect("/post/$id/edit?error=failed")
+        }
+    }
+
     fun create(ctx: Context) {
         // Verify authentication
         if (!authService.isAuthenticated(ctx)) {
