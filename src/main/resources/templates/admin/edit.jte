@@ -29,12 +29,13 @@
                 <input class="button-primary" type="submit" value="Save">
                 <button type="submit" onclick="document.getElementById('draft-flag').value='true'" style="margin-left: 1rem;">Save as Draft</button>
                 <a href="/post/${post.get("id").toString()}" class="button" style="margin-left: 1rem;">Cancel</a>
-                <form action="/post/${post.get("id").toString()}/archive" method="POST" style="display:inline; margin-left: 1rem;">
-                    <input type="hidden" name="csrf_token" value="${csrfToken}">
-                    <button type="submit" onclick="return confirm('Archive this post?')">Archive</button>
-                </form>
+                <button type="button" onclick="document.getElementById('archive-form').submit(); return false;" style="margin-left: 1rem;">Archive</button>
             </div>
         </div>
+    </form>
+
+    <form id="archive-form" action="/post/${post.get("id").toString()}/archive" method="POST" style="display:none;">
+        <input type="hidden" name="csrf_token" value="${csrfToken}">
     </form>
     @if(error != null)
     <div class="row">
