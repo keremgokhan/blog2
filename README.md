@@ -4,12 +4,15 @@ A modern, secure personal blog application written in Kotlin using the Javalin w
 
 ## Features
 
-- **Blog Posts**: Create, view, and manage blog posts with rich text content
+- **Blog Posts**: Create, edit, and manage blog posts with a rich Markdown editor (EasyMDE)
+- **Draft & Archive Workflow**: Save posts as drafts, publish, or archive them
+- **AI Post Generation**: Generate posts using Claude (Anthropic API) with a customisable prompt, editable from the admin panel
 - **Authentication**: Secure user authentication with BCrypt password hashing
 - **Sketchbook Gallery**: Image gallery feature for showcasing artwork
+- **Holocene Calendar**: Dates displayed in the Holocene calendar system (+10,000 years)
 - **Security**: CSRF protection, HTML sanitization, and input validation
 - **Responsive Design**: Mobile-friendly UI using Skeleton CSS framework
-- **RESTful API**: Clean, RESTful routing structure
+- **SEO**: Meta descriptions, Open Graph tags, canonical URLs, sitemap.xml
 
 ## Technology Stack
 
@@ -39,18 +42,11 @@ Create a MySQL database:
 CREATE DATABASE blog CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ```
 
-The application will automatically create the necessary tables on first run.
+The application will automatically create the necessary tables on first run via `SchemaUtils.createMissingTablesAndColumns()`.
 
 ### 2. Configuration
 
-Create a `.env` file in the project root (copy from `.env.example`):
-
-```bash
-cp .env.example .env
-# Edit .env with your configuration
-```
-
-Or set environment variables directly:
+Create a `.env` file in the project root or set environment variables:
 
 ```bash
 export DB_HOST=localhost
@@ -59,53 +55,59 @@ export DB_NAME=blog
 export DB_USER=your_username
 export DB_PASSWORD=your_password
 export SESSION_SECRET=your-secret-key-here
+
+# Optional: enable AI post generation
+export ANTHROPIC_API_KEY=sk-ant-...
 ```
 
 The application reads configuration in this order: `.env` file → environment variables → defaults.
 
 ### 3. Create Admin User
 
-After starting the application for the first time, create an admin user:
+After starting the application once (so tables are created), insert a user directly into MySQL. The password must be BCrypt-hashed:
 
 ```bash
-# Connect to your MySQL database
+# Generate a BCrypt hash for your password (online tools or use a script)
+# Then insert:
 mysql -u your_username -p blog
-
-# Create admin user (the password will be hashed by the application)
-# You'll need to run the app once first to create the tables, then manually insert a user
-# OR use the UserService.createUser() method programmatically
 ```
 
-For development, you can add this code temporarily to your `Application.kt` main function:
-
-```kotlin
-// Create default admin user if none exists
-transaction {
-    if (UserService().findByUsername("admin") == null) {
-        UserService().createUser("admin", "changeme")
-        logger.info { "Created default admin user" }
-    }
-}
+```sql
+INSERT INTO User (name, password, updated) VALUES ('yourname', '$2a$10$...bcrypt_hash...', NOW());
 ```
 
-### 4. Run the Application
+### 4. Seed AI Models (optional)
 
-Using Gradle:
+If you want to use AI post generation, insert the Claude user and model rows:
+
+```sql
+INSERT INTO User (name, password, is_artificial, updated)
+VALUES ('Claude', UUID(), true, NOW());
+
+SET @claude_id = LAST_INSERT_ID();
+
+INSERT INTO AiModel (model_id, name, user_id, created, updated) VALUES
+  ('claude-sonnet-4-6',         'Claude Sonnet 4',  @claude_id, NOW(), NOW()),
+  ('claude-opus-4-6',           'Claude Opus 4',    @claude_id, NOW(), NOW()),
+  ('claude-haiku-4-5-20251001', 'Claude Haiku 4.5', @claude_id, NOW(), NOW());
+```
+
+Then set your AI generation prompt via the admin panel at `/admin/prompt`.
+
+### 5. Run the Application
 
 ```bash
-./gradlew run
-```
+# Development mode (template hot-reloading)
+ENV=development ./gradlew run
 
-Or build and run the JAR:
-
-```bash
+# Production mode
 ./gradlew shadowJar
 java -jar build/libs/blog-kotlin-1.0.0-all.jar
 ```
 
-The application will start on `http://localhost:7070`
+The application will start on `http://localhost:7070`.
 
-### 5. Run Tests
+### 6. Run Tests
 
 ```bash
 ./gradlew test
@@ -118,102 +120,97 @@ blog-kotlin/
 ├── src/
 │   ├── main/
 │   │   ├── kotlin/com/keremgokhan/blog/
-│   │   │   ├── Application.kt           # Main application entry point
-│   │   │   ├── config/                  # Configuration classes
+│   │   │   ├── Application.kt               # Main application entry point & routes
+│   │   │   ├── config/
 │   │   │   │   ├── AppConfig.kt
 │   │   │   │   └── DatabaseConfig.kt
-│   │   │   ├── controllers/             # HTTP request handlers
+│   │   │   ├── controllers/
 │   │   │   │   ├── AdminController.kt
+│   │   │   │   ├── AdminPromptController.kt  # AI prompt editor
+│   │   │   │   ├── AiPostController.kt       # AI generation endpoint
 │   │   │   │   ├── IndexController.kt
 │   │   │   │   ├── PostController.kt
 │   │   │   │   └── SketchbookController.kt
-│   │   │   ├── models/                  # Data models
+│   │   │   ├── models/
+│   │   │   │   ├── AiModels.kt              # AI model registry table
 │   │   │   │   ├── Posts.kt
+│   │   │   │   ├── Settings.kt              # Key-value settings table
 │   │   │   │   └── Users.kt
-│   │   │   ├── services/                # Business logic
+│   │   │   ├── services/
+│   │   │   │   ├── AiPostService.kt         # Claude API integration
 │   │   │   │   ├── AuthService.kt
 │   │   │   │   ├── PostService.kt
+│   │   │   │   ├── SettingsService.kt       # Admin-editable settings
 │   │   │   │   └── UserService.kt
-│   │   │   └── utils/                   # Utility classes
+│   │   │   └── utils/
 │   │   │       ├── CsrfUtil.kt
 │   │   │       ├── DateUtil.kt
 │   │   │       └── HtmlSanitizer.kt
 │   │   └── resources/
-│   │       ├── templates/               # Jte templates
+│   │       ├── templates/
 │   │       │   ├── layouts/
 │   │       │   ├── posts/
 │   │       │   ├── admin/
 │   │       │   ├── sketchbook/
 │   │       │   └── errors/
-│   │       ├── public/                  # Static assets
-│   │       │   ├── css/
-│   │       │   └── images/
-│   │       ├── application.conf         # Application configuration
-│   │       └── logback.xml             # Logging configuration
-│   └── test/                           # Unit tests
-└── build.gradle.kts                    # Gradle build configuration
+│   │       ├── prompts/
+│   │       │   └── ai-post-generation.txt   # Default AI prompt template
+│   │       └── public/
+│   │           ├── css/
+│   │           └── images/
+│   └── test/
+└── build.gradle.kts
 ```
 
 ## API Routes
 
 | Method | Path | Description | Auth Required |
 |--------|------|-------------|---------------|
-| GET | `/` | List all blog posts | No |
+| GET | `/` | List all published posts | No |
+| GET | `/sitemap.xml` | XML sitemap | No |
 | GET | `/post/:id` | View single post | No |
 | GET | `/admin` | Admin dashboard or login | No |
-| POST | `/admin/login` | Authenticate user | No |
+| POST | `/admin/login` | Authenticate | No |
 | GET | `/admin/logout` | Logout | Yes |
-| GET | `/admin/create` | Show post creation form | Yes |
+| GET | `/admin/create` | Post creation form | Yes |
+| GET | `/admin/prompt` | AI prompt editor | Yes |
+| POST | `/admin/prompt` | Save AI prompt | Yes |
+| POST | `/admin/ai-generate` | Generate post via Claude API (returns JSON) | Yes |
 | POST | `/post` | Create new post | Yes |
-| GET | `/sketchbook` | View image gallery | No |
+| GET | `/post/:id/edit` | Edit post form | Yes |
+| POST | `/post/:id/edit` | Update post | Yes |
+| POST | `/post/:id/archive` | Archive post | Yes |
+| POST | `/post/:id/restore` | Restore archived post | Yes |
+| GET | `/sketchbook` | Image gallery | No |
 
 ## Security Features
 
-### Implemented Security Measures
-
 1. **Password Security**: BCrypt hashing with automatic salt generation
 2. **CSRF Protection**: Token-based protection on all state-changing operations
-3. **HTML Sanitization**: All user-generated content is sanitized using OWASP HTML Sanitizer
-4. **Input Validation**: Server-side validation on all forms
-5. **Session Management**: Secure session handling with HttpOnly cookies
-6. **SQL Injection Protection**: Parameterized queries via Exposed ORM
-7. **XSS Prevention**: Automatic HTML escaping in templates
-
-### Security Improvements Over Original Perl Version
-
-- ✅ Fixed XSS vulnerability in post body rendering
-- ✅ Added CSRF protection on all forms
-- ✅ Implemented HTML sanitization for user content
-- ✅ Added comprehensive input validation
-- ✅ Upgraded from PBKDF2 to BCrypt (industry standard)
-- ✅ Environment-based configuration (no credentials in code)
-- ✅ Secure session cookies in production
+3. **HTML Sanitization**: All user-generated content sanitized using OWASP HTML Sanitizer
+4. **Session Management**: Secure session handling with HttpOnly cookies, secure flag in production
+5. **SQL Injection Protection**: Parameterized queries via Exposed ORM
+6. **XSS Prevention**: Automatic HTML escaping in Jte templates
 
 ## Development
 
 ### Development Mode
 
-Set the `ENV` environment variable to enable development features:
-
 ```bash
 ENV=development ./gradlew run
 ```
 
-Development mode features:
-- Template hot reloading (no need to restart on template changes)
+- Template hot reloading (no restart needed on template changes)
 - More verbose logging
 - Non-secure session cookies (for HTTP testing)
 
 ### Adding a New Route
 
-1. Create a method in the appropriate controller
-2. Add the route in `Application.kt`
-3. Create corresponding Jte templates
-4. Add tests
-
-### Database Migrations
-
-The application uses Exposed's `SchemaUtils.createMissingTablesAndColumns()` for automatic schema creation. For production environments, consider using a proper migration tool like Flyway or Liquibase.
+1. Add controller method in the appropriate controller
+2. Register the route in `Application.kt`
+3. Create the corresponding Jte template
+4. Add service method if business logic is needed
+5. Write tests for the service layer
 
 ## Deployment
 
@@ -222,114 +219,62 @@ The application uses Exposed's `SchemaUtils.createMissingTablesAndColumns()` for
 - [ ] Set `ENV=production`
 - [ ] Use a strong `SESSION_SECRET` (32+ random characters)
 - [ ] Configure database credentials via environment variables
+- [ ] Set `ANTHROPIC_API_KEY` if using AI generation
 - [ ] Enable HTTPS (configure reverse proxy like Nginx)
-- [ ] Set up proper logging (configure `logback.xml`)
-- [ ] Configure database connection pool size appropriately
 - [ ] Set up automated backups for MySQL database
-- [ ] Consider using a process manager (systemd, supervisor, etc.)
+- [ ] Consider using a process manager (systemd)
 
-### Docker Deployment
+### Systemd Service
 
-Create a `Dockerfile`:
+Add environment variables in `/etc/systemd/system/blog.service`:
 
-```dockerfile
-FROM gradle:8-jdk17 AS build
-WORKDIR /app
-COPY . .
-RUN gradle shadowJar
-
-FROM eclipse-temurin:17-jre
-WORKDIR /app
-COPY --from=build /app/build/libs/blog-kotlin-1.0.0-all.jar app.jar
-EXPOSE 7070
-CMD ["java", "-jar", "app.jar"]
-```
-
-Build and run:
-
-```bash
-docker build -t blog-kotlin .
-docker run -p 7070:7070 \
-  -e DB_HOST=host.docker.internal \
-  -e DB_NAME=blog \
-  -e DB_USER=root \
-  -e DB_PASSWORD=yourpassword \
-  -e SESSION_SECRET=your-secret \
-  blog-kotlin
+```ini
+[Service]
+Environment=ENV=production
+Environment=DB_HOST=localhost
+Environment=DB_NAME=blog
+Environment=DB_USER=blog
+Environment=DB_PASSWORD=secret
+Environment=SESSION_SECRET=your-secret
+Environment=ANTHROPIC_API_KEY=sk-ant-...
+ExecStart=/usr/bin/java -Xmx256m -jar /opt/blog/blog-kotlin-1.0.0-all.jar
 ```
 
 ## Testing
 
-Run all tests:
-
 ```bash
+# Run all tests
 ./gradlew test
-```
 
-Run specific test:
-
-```bash
+# Run specific test class
 ./gradlew test --tests UserServiceTest
-```
 
-View test report:
-
-```bash
+# View test report
 open build/reports/tests/test/index.html
 ```
 
-## License
-
-This is personal blog software. Feel free to use it as a template for your own blog.
-
 ## Migration from Perl Version
-
-If you're migrating from the original Perl blog:
 
 1. **Export your data** from the Perl MySQL database
 2. **Import to new database** (schema is compatible)
-3. **Re-hash passwords**: Passwords need to be re-hashed with BCrypt. Users will need to reset passwords OR you can write a migration script
+3. **Re-hash passwords**: Passwords need to be re-hashed with BCrypt — users must reset them
 4. **Copy images**: Copy image files to `src/main/resources/public/images/`
 5. **Update configuration**: Set environment variables for database connection
-6. **Test thoroughly**: Verify all posts display correctly
 
 ## Troubleshooting
 
 ### Application won't start
-
 - Check database connection settings
 - Verify MySQL is running and accessible
-- Check logs in `logs/blog.log`
 
-### Tests failing
-
-- Ensure H2 database is in classpath
-- Check test database configuration
+### AI generation fails
+- Verify `ANTHROPIC_API_KEY` is set in the environment
+- Ensure a prompt is saved via `/admin/prompt`
+- Check that Claude user and AiModel rows exist in the database
 
 ### Templates not updating
-
 - Make sure you're running in development mode (`ENV=development`)
-- Restart the application
-
-## Future Enhancements
-
-Potential features to add:
-
-- [ ] Post editing and deletion
-- [ ] Rich text editor for posts
-- [ ] Image upload functionality for posts
-- [ ] Post categories and tags
-- [ ] RSS feed
-- [ ] Comments system
-- [ ] Search functionality
-- [ ] Markdown support
-- [ ] Draft/publish workflow
-- [ ] Multiple users with role-based access
-
-## Support
-
-For issues or questions, please open an issue on GitHub or contact the maintainer.
 
 ---
 
-Built with ❤️ using Kotlin and Javalin
+Built with Kotlin and Javalin
