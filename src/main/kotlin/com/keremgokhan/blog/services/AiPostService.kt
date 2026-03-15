@@ -52,7 +52,8 @@ class AiPostService(
                 .replace(Regex("<[^>]*>"), " ")
                 .replace(Regex("\\s+"), " ")
                 .trim()
-            "Post ${i + 1} — \"${post.title}\":\n$plainBody"
+            val byLine = if (post.aiGenerated) "[by AI]" else "[by Kerem]"
+            "Post ${i + 1} $byLine — \"${post.title}\":\n$plainBody"
         }.joinToString("\n\n---\n\n")
 
         val template = settingsService.get("ai_prompt")
@@ -61,7 +62,8 @@ class AiPostService(
             error("ai_prompt setting is empty")
         }
 
-        val hint = posts.random().title
+        val humanPosts = posts.filter { !it.aiGenerated }
+        val hint = (if (humanPosts.isNotEmpty()) humanPosts else posts).random().title
         logger.info { "Using topic hint from post: \"$hint\"" }
 
         return template
