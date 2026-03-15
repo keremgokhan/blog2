@@ -1,0 +1,39 @@
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <!-- Pins - top -->
+  <line x1="20" y1="8" x2="20" y2="16" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+  <line x1="28" y1="8" x2="28" y2="16" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+  <line x1="36" y1="8" x2="36" y2="16" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+  <line x1="44" y1="8" x2="44" y2="16" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+  <!-- Pins - bottom -->
+  <line x1="20" y1="48" x2="20" y2="56" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+  <line x1="28" y1="48" x2="28" y2="56" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+  <line x1="36" y1="48" x2="36" y2="56" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+  <line x1="44" y1="48" x2="44" y2="56" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+  <!-- Pins - left -->
+  <line x1="8" y1="20" x2="16" y2="20" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+  <line x1="8" y1="28" x2="16" y2="28" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+  <line x1="8" y1="36" x2="16" y2="36" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+  <line x1="8" y1="44" x2="16" y2="44" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+  <!-- Pins - right -->
+  <line x1="48" y1="20" x2="56" y2="20" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+  <line x1="48" y1="28" x2="56" y2="28" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+  <line x1="48" y1="36" x2="56" y2="36" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+  <line x1="48" y1="44" x2="56" y2="44" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+  <!-- Chip body -->
+  <rect x="16" y="16" width="32" height="32" rx="4" fill="none" stroke="white" stroke-width="1.5"/>
+  <!-- Inner die -->
+  <rect x="22" y="22" width="20" height="20" rx="2" fill="none" stroke="white" stroke-width="0.75" opacity="0.5"/>
+  <!-- Neural nodes -->
+  <circle cx="32" cy="32" r="2.5" fill="white"/>
+  <circle cx="32" cy="25" r="1.5" fill="white" opacity="0.7"/>
+  <circle cx="38" cy="30" r="1.5" fill="white" opacity="0.7"/>
+  <circle cx="36" cy="37" r="1.5" fill="white" opacity="0.7"/>
+  <circle cx="28" cy="37" r="1.5" fill="white" opacity="0.7"/>
+  <circle cx="26" cy="30" r="1.5" fill="white" opacity="0.7"/>
+  <!-- Neural connections -->
+  <line x1="32" y1="29.5" x2="32" y2="26.5" stroke="white" stroke-width="0.75" opacity="0.4"/>
+  <line x1="34" y1="31" x2="36.5" y2="30" stroke="white" stroke-width="0.75" opacity="0.4"/>
+  <line x1="33.5" y1="34" x2="35" y2="36" stroke="white" stroke-width="0.75" opacity="0.4"/>
+  <line x1="30.5" y1="34" x2="29" y2="36" stroke="white" stroke-width="0.75" opacity="0.4"/>
+  <line x1="30" y1="31" x2="27.5" y2="30" stroke="white" stroke-width="0.75" opacity="0.4"/>
+</svg>

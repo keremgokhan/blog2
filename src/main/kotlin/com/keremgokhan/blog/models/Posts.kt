@@ -13,6 +13,7 @@ object Posts : IntIdTable("Post") {
     val created = datetime("created")
     val updated = datetime("updated").nullable()
     val status = varchar("status", 20).default("published")
+    val aiGenerated = bool("ai_generated").default(false)
 }
 
 data class Post(
@@ -21,7 +22,8 @@ data class Post(
     val body: String,
     val authorId: Int,
     val created: LocalDateTime,
-    val status: String = "published"
+    val status: String = "published",
+    val aiGenerated: Boolean = false
 )
 
 data class PostWithAuthor(
@@ -30,5 +32,6 @@ data class PostWithAuthor(
     val body: String,
     val author: String,
     val created: LocalDateTime,
-    val status: String = "published"
+    val status: String = "published",
+    val aiGenerated: Boolean = false
 )

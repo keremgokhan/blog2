@@ -7,11 +7,18 @@
 @param List<Map<String, Object>> drafts
 @param List<Map<String, Object>> archived
 @param String csrfToken
+@param String error = null
 
 @template.layouts.blog(title = "Admin", currentUser = currentUser, isAuthenticated = isAuthenticated, today = today, content = @`
     <div class="row">
         <div class="twelve columns">
             <h5>Welcome back, ${currentUser.getName()}.</h5>
+        </div>
+    </div>
+    <div class="row" style="margin-top: 0.5rem;">
+        <div class="twelve columns">
+            <a href="/admin/create" class="button">New Post</a>
+            <a href="/admin/prompt" class="button" style="margin-left: 1rem;">AI Prompt</a>
         </div>
     </div>
 

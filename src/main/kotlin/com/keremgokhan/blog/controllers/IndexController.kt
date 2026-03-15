@@ -19,7 +19,8 @@ class IndexController(
                 "body" to HtmlSanitizer.sanitize(post.body),
                 "author" to post.author,
                 "date" to DateUtil.formatDateHolocene(post.created),
-                "time" to DateUtil.formatTime(post.created)
+                "time" to DateUtil.formatTime(post.created),
+                "aiGenerated" to post.aiGenerated
             )
         }
 

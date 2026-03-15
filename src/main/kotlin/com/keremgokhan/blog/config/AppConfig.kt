@@ -6,7 +6,8 @@ data class AppConfig(
     val server: ServerConfig,
     val database: DatabaseConfig,
     val session: SessionConfig,
-    val analytics: AnalyticsConfig
+    val analytics: AnalyticsConfig,
+    val ai: AiConfig
 ) {
     data class ServerConfig(
         val port: Int,
@@ -31,6 +32,10 @@ data class AppConfig(
         val googleAnalyticsId: String?
     )
 
+    data class AiConfig(
+        val anthropicApiKey: String?
+    )
+
     companion object {
         fun load(dotenv: Dotenv? = null): AppConfig {
             return AppConfig(
@@ -52,6 +57,9 @@ data class AppConfig(
                 analytics = AnalyticsConfig(
                     enabled = getEnv(dotenv, "ANALYTICS_ENABLED", "false").toBoolean(),
                     googleAnalyticsId = getEnvOrNull(dotenv, "GOOGLE_ANALYTICS_ID")
+                ),
+                ai = AiConfig(
+                    anthropicApiKey = getEnvOrNull(dotenv, "ANTHROPIC_API_KEY")
                 )
             )
         }

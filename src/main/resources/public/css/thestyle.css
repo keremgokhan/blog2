@@ -292,3 +292,17 @@ li {
 .post-content p {
     margin-bottom: 1rem;
 }
+
+/* AI badge - transistor icon shown next to date for AI-generated posts */
+.ai-badge {
+    display: inline-flex;
+    align-items: center;
+    vertical-align: middle;
+    color: #666;
+    cursor: help;
+    margin-right: 0.3em;
+}
+
+.ai-badge:hover {
+    color: #AAA;
+}

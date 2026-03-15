@@ -3,8 +3,10 @@ package com.keremgokhan.blog
 import com.keremgokhan.blog.config.AppConfig
 import com.keremgokhan.blog.config.DatabaseConfig
 import com.keremgokhan.blog.controllers.*
+import com.keremgokhan.blog.services.AiPostService
 import com.keremgokhan.blog.services.AuthService
 import com.keremgokhan.blog.services.PostService
+import com.keremgokhan.blog.services.SettingsService
 import com.keremgokhan.blog.services.UserService
 import com.keremgokhan.blog.utils.DateUtil
 import gg.jte.ContentType
@@ -36,11 +38,15 @@ fun main() {
     val userService = UserService()
     val postService = PostService()
     val authService = AuthService(userService)
+    val settingsService = SettingsService()
+    val aiPostService = AiPostService(postService, settingsService, config.ai.anthropicApiKey)
 
     // Initialize controllers
     val indexController = IndexController(postService, authService)
     val postController = PostController(postService, authService)
     val adminController = AdminController(authService, postService)
+    val aiPostController = AiPostController(aiPostService, authService)
+    val adminPromptController = AdminPromptController(settingsService, authService)
     val sketchbookController = SketchbookController(authService)
 
     // Configure template engine
@@ -99,6 +105,9 @@ fun main() {
     app.post("/admin/login", adminController::login)
     app.get("/admin/logout", adminController::logout)
     app.get("/admin/create", adminController::showCreatePost)
+    app.post("/admin/ai-generate", aiPostController::generate)
+    app.get("/admin/prompt", adminPromptController::show)
+    app.post("/admin/prompt", adminPromptController::save)
 
     // Post creation and editing
     app.post("/post", postController::create)

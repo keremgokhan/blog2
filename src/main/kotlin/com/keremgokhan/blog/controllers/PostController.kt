@@ -51,7 +51,8 @@ class PostController(
                 "body" to sanitizedBody,
                 "author" to post.author,
                 "date" to DateUtil.formatDateHolocene(post.created),
-                "time" to DateUtil.formatTime(post.created)
+                "time" to DateUtil.formatTime(post.created),
+                "aiGenerated" to post.aiGenerated
             ),
             "description" to description,
             "canonicalUrl" to "https://keremgokhan.net/post/${post.id}",
@@ -223,8 +224,13 @@ class PostController(
 
         val user = authService.requireAuth(ctx)
         val status = if (ctx.formParam("draft") == "true") "draft" else "published"
+        val aiGenerated = ctx.formParam("ai_generated") == "true"
+        val aiModel = ctx.formParam("ai_model")
+        val authorId = if (aiGenerated && !aiModel.isNullOrBlank())
+            postService.getAiUserIdByModel(aiModel) ?: user.id
+        else user.id
         val html = MarkdownUtil.render(body)
-        val post = postService.createPost(title, html, user.id, status)
+        val post = postService.createPost(title, html, authorId, status, aiGenerated)
 
         if (post != null) {
             logger.info { "Post created (${post.status}): ${post.id} - ${post.title}" }

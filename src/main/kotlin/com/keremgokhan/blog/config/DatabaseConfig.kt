@@ -1,10 +1,13 @@
 package com.keremgokhan.blog.config
 
+import com.keremgokhan.blog.models.AiModels
 import com.keremgokhan.blog.models.Posts
+import com.keremgokhan.blog.models.Settings
 import com.keremgokhan.blog.models.Users
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import mu.KotlinLogging
+import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -41,7 +44,7 @@ object DatabaseConfig {
 
         // Create tables if they don't exist
         transaction {
-            SchemaUtils.createMissingTablesAndColumns(Users, Posts)
+            SchemaUtils.createMissingTablesAndColumns(Users, Posts, AiModels, Settings)
         }
 
         logger.info { "Database initialized successfully" }

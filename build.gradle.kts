@@ -42,6 +42,9 @@ dependencies {
     // Markdown rendering
     implementation("com.vladsch.flexmark:flexmark:0.64.8")
 
+    // JSON - for AI post generation (Claude API)
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.15.2")
+
     // Testing
     testImplementation(kotlin("test"))
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.1")

@@ -1,5 +1,6 @@
 package com.keremgokhan.blog.services
 
+import com.keremgokhan.blog.models.AiModels
 import com.keremgokhan.blog.models.Post
 import com.keremgokhan.blog.models.PostWithAuthor
 import com.keremgokhan.blog.models.Posts
@@ -37,12 +38,13 @@ class PostService {
             .singleOrNull()
     }
 
-    fun createPost(title: String, body: String, authorId: Int, status: String = "published"): Post? = transaction {
+    fun createPost(title: String, body: String, authorId: Int, status: String = "published", aiGenerated: Boolean = false): Post? = transaction {
         val id = Posts.insert {
             it[Posts.title] = title
             it[Posts.body] = body
             it[Posts.authorId] = authorId
             it[Posts.status] = status
+            it[Posts.aiGenerated] = aiGenerated
             it[created] = LocalDateTime.now()
         } get Posts.id
 
@@ -55,7 +57,8 @@ class PostService {
                     body = row[Posts.body],
                     authorId = row[Posts.authorId].value,
                     created = row[Posts.created],
-                    status = row[Posts.status]
+                    status = row[Posts.status],
+                    aiGenerated = row[Posts.aiGenerated]
                 )
             }
             .singleOrNull()
@@ -79,12 +82,20 @@ class PostService {
         Posts.deleteWhere(op = { Posts.id eq id }) > 0
     }
 
+    fun getAiUserIdByModel(modelId: String): Int? = transaction {
+        AiModels.selectAll()
+            .where { AiModels.modelId eq modelId }
+            .firstOrNull()
+            ?.get(AiModels.userId)?.value
+    }
+
     private fun rowToPostWithAuthor(row: ResultRow) = PostWithAuthor(
         id = row[Posts.id].value,
         title = row[Posts.title],
         body = row[Posts.body],
         author = row[Users.name],
         created = row[Posts.created],
-        status = row[Posts.status]
+        status = row[Posts.status],
+        aiGenerated = row[Posts.aiGenerated]
     )
 }

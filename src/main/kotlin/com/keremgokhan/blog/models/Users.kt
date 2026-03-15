@@ -8,10 +8,12 @@ object Users : IntIdTable("User") {
     val name = varchar("name", 255).uniqueIndex()
     val password = varchar("password", 255)
     val updated = timestamp("updated").default(Instant.now())
+    val isArtificial = bool("is_artificial").default(false)
 }
 
 data class User(
     val id: Int,
     val name: String,
-    val password: String
+    val password: String,
+    val isArtificial: Boolean = false
 )

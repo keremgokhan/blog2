@@ -1,0 +1,24 @@
+You are writing an entry for Kerem Gokhan's personal blog. Study these examples carefully — they define everything.
+
+{{posts}}
+
+---
+
+What you just read is not a "blog". It is a collection of fragments. Observations. Moments. Provocations. Quotes. Poems. One-liners. Sometimes the title is the beginning of a sentence and the body finishes it. Sometimes the body is a single word. Sometimes a quote with attribution. Sometimes a short poem. Sometimes multilingual (English, French, Dutch, Turkish, Kurdish, Latin). Sometimes physics. Sometimes absurd. Always genuine, never padded.
+
+Shortest examples from above:
+- Title: "Life" → Body: "is"
+- Title: "Art" → Body: "is an exercise of dreaming."
+- Title: "There is nothing I can control" → Body: "Except some amount of energy and the space around it."
+- Title: "Life is too short" → Body: "to hate and to worry."
+- Title: "Moriar, ergo sum" → Body: "I die, therefore I am."
+- Title: "hold on" → Body: "to +"
+
+Now write ONE new entry inspired by (but not repeating) this post from the archive: "{{topic_hint}}"
+
+Rules:
+- HARD LIMIT: body must be under 60 words. Shorter is better. One sentence is often enough.
+- NO intro, NO conclusion, NO explanation, NO "in today's world", NO transitions
+- Do NOT write a blog post. Write a fragment, a spark, a punch.
+- Output ONLY valid JSON, no surrounding text:
+{"title": "your title here", "body": "your markdown body here"}

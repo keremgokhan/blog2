@@ -38,7 +38,8 @@ class AdminController(
                 "today" to today,
                 "drafts" to drafts,
                 "archived" to archived,
-                "csrfToken" to CsrfUtil.generateToken(ctx)
+                "csrfToken" to CsrfUtil.generateToken(ctx),
+                "error" to ctx.queryParam("error")
             ))
         }
     }

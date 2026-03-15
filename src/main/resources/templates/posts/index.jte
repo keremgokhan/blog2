@@ -18,6 +18,9 @@
             </div>
             <div class="two columns date">
                 <p title="${post.get("time").toString()}">
+                    @if(Boolean.TRUE.equals(post.get("aiGenerated")))
+                    <span class="ai-badge" title="This post is written by ${post.get("author").toString()}, on behalf of Kerem."><img src="/images/ai-cpu-icon-small-white.svg" width="26" height="26" alt="AI generated"></span>
+                    @endif
                     ${post.get("date").toString()}
                 </p>
             </div>
